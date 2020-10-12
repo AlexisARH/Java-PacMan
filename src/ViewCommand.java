@@ -123,6 +123,7 @@ public class ViewCommand implements Observer{
 		slider.setMajorTickSpacing(1);
 		slider.setPaintTicks(true);
 		slider.setPaintLabels(true);
+		slider.setValue(2);
 		slider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent event) {
 				int value = slider.getValue();

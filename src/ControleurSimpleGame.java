@@ -10,7 +10,6 @@ public class ControleurSimpleGame implements InterfaceControleur{
 
     @Override
     public void start() {
-        this.game.init();
         this.game.launch();
     }
 

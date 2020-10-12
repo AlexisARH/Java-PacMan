@@ -68,7 +68,7 @@ public class ViewCommand implements Observer{
 		this.runButton.setEnabled(false);
 		this.runButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evenement) {
-				controleurSimpleGame.start();
+				controleurSimpleGame.run();
 			}
 		});
 
@@ -135,7 +135,7 @@ public class ViewCommand implements Observer{
 		turnsPanel.add(sliderPanel);
 
 		JPanel currentTurnPanel = new JPanel(new GridBagLayout());
-		this.currentTurnLabel = new JLabel("Turn : ");
+		this.currentTurnLabel = new JLabel("Turn : 0");
 		currentTurnPanel.add(currentTurnLabel);
 		turnsPanel.add(currentTurnPanel);
 

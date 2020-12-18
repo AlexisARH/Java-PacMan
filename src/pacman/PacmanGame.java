@@ -1,6 +1,4 @@
 package pacman;
-
-import com.sun.security.jgss.GSSUtil;
 import engine.Game;
 
 import java.util.ArrayList;
@@ -10,16 +8,18 @@ public class PacmanGame extends Game{
     private String mazePath;
     private static Maze maze;
     private ArrayList<Agent> agentList;
-
+    private String strategyName;
+    
     int edible;
     int eaten;
     int capsuleTimer;
     int capsuleTime;
     boolean capsuleActivated;
 
-    public PacmanGame(int _maxturn, String _mazePath) {
+    public PacmanGame(int _maxturn, String _mazePath, String _strategyName) {
         super(_maxturn);
         this.mazePath = _mazePath;
+        this.strategyName = _strategyName;
         initializeGame();
     }
 
@@ -86,6 +86,10 @@ public class PacmanGame extends Game{
         }
 
         for(Agent agent : this.agentList){
+            // Temporaire => à remplacer par du UI Swing
+            if(strategyName != "Keyboard"){
+                agent.setStrategy(new RandomStrategy(agent));
+            }
             AgentAction action = agent.getStrategy().action(this);
             try{
                 if(isLegalMove(agent, action)) {

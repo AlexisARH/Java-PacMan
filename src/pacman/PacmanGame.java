@@ -8,7 +8,6 @@ public class PacmanGame extends Game{
     private String mazePath;
     private static Maze maze;
     private ArrayList<Agent> agentList;
-    private String strategyName;
     
     int edible;
     int eaten;
@@ -16,10 +15,9 @@ public class PacmanGame extends Game{
     int capsuleTime;
     boolean capsuleActivated;
 
-    public PacmanGame(int _maxturn, String _mazePath, String _strategyName) {
+    public PacmanGame(int _maxturn, String _mazePath) {
         super(_maxturn);
         this.mazePath = _mazePath;
-        this.strategyName = _strategyName;
         initializeGame();
     }
 
@@ -50,6 +48,7 @@ public class PacmanGame extends Game{
                 this.agentList.add(agentFactoryG.createAgent(pos));
             }
             this.capsuleToggle(false);
+            System.out.println("Capsule désactivée");
 
             // Compteur de comestibles
             int mazeSizeX = maze.getSizeX();
@@ -74,6 +73,7 @@ public class PacmanGame extends Game{
                 return (a.isAlive() && this.eaten < this.edible);
             }
         }
+        System.out.println("Tous les pacmans sont mort");
         return false;
     }
 
@@ -83,13 +83,10 @@ public class PacmanGame extends Game{
         if (capsuleTimer==0) {
             this.capsuleActivated = false;
             this.capsuleToggle(false);
+            System.out.println("Capsule désactivée");
         }
 
         for(Agent agent : this.agentList){
-            // Temporaire => à remplacer par du UI Swing
-            if(strategyName != "Keyboard"){
-                agent.setStrategy(new RandomStrategy(agent));
-            }
             AgentAction action = agent.getStrategy().action(this);
             try{
                 if(isLegalMove(agent, action)) {
@@ -113,14 +110,17 @@ public class PacmanGame extends Game{
                     this.capsuleTimer += this.capsuleTime;
                     this.capsuleActivated = true;
                     this.capsuleToggle(true);
+                    System.out.println("Capsule activée");
                 }
                 for(Agent ghost : this.agentList){
                     if(ghost instanceof Ghost){
                         if(agent.getXy().equals(ghost.getXy())){
                             if(this.capsuleActivated){
                                 ghost.Die();
+                                System.out.println("-1 Pac-gum");
                             } else {
                                 agent.Die();
+                                System.out.println("-1 Pac-man");
                             }
                         }
                     }

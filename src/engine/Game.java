@@ -31,6 +31,7 @@ public abstract class Game extends Observable implements Runnable {
 		} else {
 			this.isRunning = false;
 			this.gameOver();
+			System.out.println("Game over ! " + this.turn);
 		}
 		setChanged();
 		notifyObservers();

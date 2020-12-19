@@ -61,7 +61,7 @@ public class PanelPacmanGame extends JPanel {
 		for (int x = 0; x < sx; x++) {
 			double posy = 0;
 			for (int y = 0; y < sy; y++) {
-				if (m.isWall(x, y)) {
+				if (m.detecteWall(x, y)) {
 					g.setColor(wallColor2);
 					g.fillRect((int) posx, (int) posy, (int) (stepx + 1),
 							(int) (stepy + 1));
@@ -73,7 +73,7 @@ public class PanelPacmanGame extends JPanel {
 					g.fillRect((int) (npx + posx), (int) (npy + posy),
 							(int) (nsx), (int) nsy);
 				}
-				if (m.isFood(x, y)) {
+				if (m.isNourriture(x, y)) {
 					g.setColor(colorFood);
 					double nsx = stepx * sizeFood;
 					double nsy = stepy * sizeFood;

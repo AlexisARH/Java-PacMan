@@ -42,7 +42,7 @@ public class KeyboardStrategy extends JFrame implements Strategy, KeyListener {
                     e.printStackTrace();
                 }
 
-                if(PacmanGame.isLegalMove(this.agent, action)){
+                if(PacmanGame.detectionIncoherenceDeplacement(this.agent, action)){
                     return action;
                 }
             }

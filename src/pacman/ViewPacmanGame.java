@@ -35,10 +35,10 @@ public class ViewPacmanGame implements Observer {
 
         for (Agent a : game.getAgents()) {
             if(a instanceof Pacman) {
-                pacmanPositions.add(a.getXy());
+                pacmanPositions.add(a.getCoord());
             }
             if(a instanceof Ghost) {
-                ghostsPositions.add(a.getXy());
+                ghostsPositions.add(a.getCoord());
             }
         }
 

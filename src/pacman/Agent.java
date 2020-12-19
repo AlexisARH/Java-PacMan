@@ -11,7 +11,7 @@ public abstract class Agent {
         this.strategy = new RandomStrategy(this);
     }
 
-    public PositionAgent getXy() {
+    public PositionAgent getCoord() {
         return xy;
     }
 
@@ -27,7 +27,7 @@ public abstract class Agent {
         this.strategy = _newStrategy;
     }
 
-    public Boolean isAlive() {
+    public Boolean isLiving() {
         return alive;
     }
 

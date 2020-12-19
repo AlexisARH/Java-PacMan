@@ -9,10 +9,10 @@ public class PacmanGame extends Game{
     private static Maze maze;
     private ArrayList<Agent> agentList;
     
-    int edible;
-    int eaten;
-    int capsuleTimer;
-    int capsuleTime;
+    int itemMangeable;
+    int nbMange;
+    int capsuleChrono;
+    int capsuleTempsActivation;
     boolean capsuleActivated;
 
     public PacmanGame(int _maxturn, String _mazePath) {
@@ -25,10 +25,10 @@ public class PacmanGame extends Game{
     public void initializeGame() {
         try {
             // Initialisations de variables
-            this.edible = 0;
-            this.eaten = 0;
-            this.capsuleTimer = 0;
-            this.capsuleTime = 20;
+            this.itemMangeable = 0;
+            this.nbMange = 0;
+            this.capsuleChrono = 0;
+            this.capsuleTempsActivation = 20;
             this.capsuleActivated = false;
 
             // Création du labyrinthe
@@ -55,8 +55,8 @@ public class PacmanGame extends Game{
             int mazeSizeY = maze.getSizeY();
             for(int i=0; i<mazeSizeX; i++){
                 for(int j=0; j<mazeSizeY; j++){
-                    if (maze.isFood(i, j) || maze.isCapsule(i, j)){
-                        this.edible++;
+                    if (maze.isNourriture(i, j) || maze.isCapsule(i, j)){
+                        this.itemMangeable++;
                     }
                 }
             }
@@ -70,7 +70,7 @@ public class PacmanGame extends Game{
     public boolean gameContinue() {
         for (Agent a : agentList){
             if (a instanceof Pacman){
-                return (a.isAlive() && this.eaten < this.edible);
+                return (a.isLiving() && this.nbMange < this.itemMangeable);
             }
         }
         System.out.println("Tous les pacmans sont mort");
@@ -79,8 +79,8 @@ public class PacmanGame extends Game{
 
     @Override
     public void takeTurn() {
-        this.capsuleTimer--;
-        if (capsuleTimer==0) {
+        this.capsuleChrono--;
+        if (capsuleChrono==0) {
             this.capsuleActivated = false;
             this.capsuleToggle(false);
             System.out.println("Capsule désactivée");
@@ -89,32 +89,31 @@ public class PacmanGame extends Game{
         for(Agent agent : this.agentList){
             AgentAction action = agent.getStrategy().action(this);
             try{
-                if(isLegalMove(agent, action)) {
+                if(detectionIncoherenceDeplacement(agent, action)) {
                     moveAgent(agent, action);
                 }
             } catch (Exception e){
                 System.out.println(e.toString());
             }
 
-            int x = agent.getXy().getX();
-            int y = agent.getXy().getY();
+            int x = agent.getCoord().getX();
+            int y = agent.getCoord().getY();
 
             if(agent instanceof Pacman){
-                if(maze.isFood(x, y)){
+                if(maze.isNourriture(x, y)){
                     maze.setFood(x, y, false);
-                    // TODO: Food mechanics
-                    eaten++;
+                    nbMange++;
                 }
                 if(maze.isCapsule(x, y)){
                     maze.setCapsule(x, y, false);
-                    this.capsuleTimer += this.capsuleTime;
+                    this.capsuleChrono += this.capsuleTempsActivation;
                     this.capsuleActivated = true;
                     this.capsuleToggle(true);
                     System.out.println("Capsule activée");
                 }
                 for(Agent ghost : this.agentList){
                     if(ghost instanceof Ghost){
-                        if(agent.getXy().equals(ghost.getXy())){
+                        if(agent.getCoord().equals(ghost.getCoord())){
                             if(this.capsuleActivated){
                                 ghost.Die();
                                 System.out.println("-1 Pac-gum");
@@ -134,18 +133,23 @@ public class PacmanGame extends Game{
         System.out.println("Game Over !");
     }
 
-    public static boolean isLegalMove(Agent agent, AgentAction action){
-        int x = agent.getXy().getX() + action.get_vx();
-        int y = agent.getXy().getY() + action.get_vy();
-        return !maze.isWall(x, y);
+    public static boolean detectionIncoherenceDeplacement(Agent agent, AgentAction action){
+        int x = agent.getCoord().getX() + action.get_vx();
+        int y = agent.getCoord().getY() + action.get_vy();
+        return !maze.detecteWall(x, y);
     }
-
+	static Boolean detectionIncoherenceDeplacement(PositionAgent agent, AgentAction action) {
+		int x = agent.getX() + action.get_vx();
+		int y = agent.getY() + action.get_vy();
+		if(maze.detecteWall(x, y)) return false;
+		return true;
+    }
     private void moveAgent(Agent agent, AgentAction action){
-        int x = agent.getXy().getX() + action.get_vx();
-        int y = agent.getXy().getY() + action.get_vy();
-        agent.getXy().setX(x);
-        agent.getXy().setY(y);
-        agent.getXy().setDir(action.get_direction());
+        int x = agent.getCoord().getX() + action.get_vx();
+        int y = agent.getCoord().getY() + action.get_vy();
+        agent.getCoord().setX(x);
+        agent.getCoord().setY(y);
+        agent.getCoord().setDir(action.get_direction());
     }
 
     private void capsuleToggle(boolean state){
@@ -167,7 +171,7 @@ public class PacmanGame extends Game{
     public ArrayList<Agent> getAgents() {
         for(Agent a : agentList){
             System.out.println(a.getClass());
-            System.out.println(a.getXy());
+            System.out.println(a.getCoord());
             System.out.println(a.getStrategy());
             System.out.println("\n");
         }

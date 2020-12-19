@@ -16,7 +16,7 @@ public class RandomStrategy implements Strategy{
 
         int j = (i+1)%4;
         AgentAction action = new AgentAction(j);
-        while(!PacmanGame.isLegalMove(this.agent, action) && j != i){
+        while(!PacmanGame.detectionIncoherenceDeplacement(this.agent, action) && j != i){
             action = new AgentAction(j);
             j = (j+1)%4;
         }
